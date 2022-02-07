@@ -38,6 +38,7 @@ urlpatterns = [
         name='swordfish-bebop'
     ),
     path('polls/', include('polls.urls')),
+    path('guess/', include('guess.urls')),
     path('admin/', admin.site.urls),
     url(r'^index/(?P<path>.*)$', serve,
         {'document_root': INDEX_PAGE_ROOT, 'show_indexes': True},
