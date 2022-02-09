@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
     'guess.apps.GuessConfig',
+    'home.apps.HomeConfig',
+    'hello.apps.HelloConfig',
 ]
 
 MIDDLEWARE = [
