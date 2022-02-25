@@ -43,6 +43,10 @@ urlpatterns = [
     path('guess/', include('guess.urls')),
     path('hello/', include('hello.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('autos/', include('autos.urls')),
+    path('cats/', include('cats.urls')),
+    path('gadgets/', include('gadgets.urls')),
     url(r'^index/(?P<path>.*)$', serve,
         {'document_root': INDEX_PAGE_ROOT, 'show_indexes': True},
         name='index_path'

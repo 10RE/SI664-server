@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     'guess.apps.GuessConfig',
     'home.apps.HomeConfig',
     'hello.apps.HelloConfig',
+    'autos.apps.AutosConfig',
+    'cats.apps.CatsConfig',
+    'gadgets.apps.GadgetsConfig',
+    
 ]
 
 MIDDLEWARE = [
