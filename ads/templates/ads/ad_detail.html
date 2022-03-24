@@ -15,6 +15,12 @@
 </style>
 {% endblock %}
 {% block content %}
+{% if ad.content_type %}
+<div id="overlay" class="overlay" style="text-align: center;"
+   onclick="document.getElementById('overlay').style.display = 'none';" >
+<img style="max-width:80%;max-height:80%;margin-top: 50px; border:3px solid black;" src="{% url 'ads:ad_picture' ad.id %}">
+</div>
+{% endif %}
 <span style="float: right;">
 ({{ ad.updated_at|naturaltime }})
 {% if ad.owner == user %}
@@ -24,7 +30,7 @@
 </span>
 <h1>{{ ad.title }}</h1>
 {% if ad.content_type %}
-<img style="float:right; max-width:50%;" src="{% url 'ads:ad_picture' ad.id %}"
+<img style="float:right; max-width:30%;" src="{% url 'ads:ad_picture' ad.id %}"
     onclick="document.getElementById('overlay').style.display = 'block';">
 {% endif %}
 <p>
@@ -33,24 +39,8 @@
 <p>
 Price: ${{ ad.price }}
 </p>
-<p>
-</p>
-<p>
-<a href="{% url 'ads:all' %}">All ads</a>
-</p>
-({{ ad.updated_at|naturaltime }})
-</p>
 {% if user.is_authenticated %}
 <br clear="all"/>
-<p>
-{% load crispy_forms_tags %}
-<form method="post" action="{% url 'ads:ad_comment_create' ad.id %}">
-    {% csrf_token %}
-    {{ comment_form|crispy }}
-<input type="submit" value="Submit">
-<input type="submit" value="All Ads" onclick="window.location.href='{% url 'ads:all' %}';return false;">
-</form>
-</p>
 {% endif %}
 
 {% for comment in comments %}

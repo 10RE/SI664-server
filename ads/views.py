@@ -26,8 +26,8 @@ class AdDetailView(OwnerDetailView):
     def get(self, request, pk) :
         x = Ad.objects.get(id=pk)
         comments = Comment.objects.filter(ad=x).order_by('-updated_at')
-        comment_form = CommentForm()
-        context = { 'ad' : x, 'comments': comments, 'comment_form': comment_form }
+        #comment_form = CommentForm()
+        context = { 'ad' : x, 'comments': comments}#, 'comment_form': comment_form }
         return render(request, self.template_name, context)
 
 """
@@ -39,6 +39,25 @@ class AdCreateView(OwnerCreateView):
 class AdUpdateView(OwnerUpdateView):
     model = Ad
     fields = ['title', 'price', 'text']
+
+<p>
+{% load crispy_forms_tags %}
+<form method="post" action="{% url 'ads:ad_comment_create' ad.id %}">
+    {% csrf_token %}
+    {{ comment_form|crispy }}
+<input type="submit" value="Submit">
+<input type="submit" value="All Ads" onclick="window.location.href='{% url 'ads:all' %}';return false;">
+</form>
+</p>
+
+<p>
+</p>
+<p>
+<a href="{% url 'ads:all' %}">All ads</a>
+</p>
+({{ ad.updated_at|naturaltime }})
+</p>
+
 """
 
 class AdDeleteView(OwnerDeleteView):
