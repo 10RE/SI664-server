@@ -13,6 +13,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from ads.forms import CreateForm, CommentForm
 
+from django.db.models import Q
 
 class AdListView(OwnerListView):
     model = Ad
@@ -26,11 +27,22 @@ class AdListView(OwnerListView):
             rows = request.user.favorite_ads.values('id')
             # favorites = [2, 4, ...] using list comprehension
             favorites = [ row['id'] for row in rows ]
+        strval =  request.GET.get("search", False)
+        if strval :
+            # Simple title-only search
+            # objects = Post.objects.filter(title__contains=strval).select_related().order_by('-updated_at')[:10]
+
+            # Multi-field search
+            # __icontains for case-insensitive search
+            query = Q(title__icontains=strval) 
+            query.add(Q(text__icontains=strval), Q.OR)
+            ad_list = Ad.objects.filter(query).select_related().order_by('-updated_at')[:10]
+        else :
+            ad_list = Ad.objects.all().order_by('-updated_at')[:10]
         ctx = {'ad_list' : ad_list, 'favorites': favorites}
         return render(request, self.template_name, ctx)
     # By convention:
     # template_name = "ads/Ad_list.html"
-
 
 class AdDetailView(OwnerDetailView):
     model = Ad
@@ -95,6 +107,7 @@ class AdCreateView(LoginRequiredMixin, View):
         pic = form.save(commit=False)
         pic.owner = self.request.user
         pic.save()
+        form.save_m2m()    # Add this
         return redirect(self.success_url)
 
 
@@ -118,7 +131,7 @@ class AdUpdateView(LoginRequiredMixin, View):
 
         pic = form.save(commit=False)
         pic.save()
-
+        form.save_m2m()    # Add this
         return redirect(self.success_url)
 
 class CommentCreateView(LoginRequiredMixin, View):
@@ -173,3 +186,4 @@ class DeleteFavoriteView(LoginRequiredMixin, View):
         except Fav.DoesNotExist as e:
             pass
         return HttpResponse()
+
